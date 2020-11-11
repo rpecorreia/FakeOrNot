@@ -1,0 +1,48 @@
+{
+    "manifest_version": 2,
+    "name": "Fake or Not?",
+    "version": "0.0.1",
+    "description": "Hightlight fake or malicious content in red and very approved content in green.",
+    "icons": {
+        "16": "images/16.png",
+        "19": "images/19.png",
+        "32": "images/32.png",
+        "38": "images/38.png",
+        "48": "images/48.png",
+        "64": "images/64.png",
+        "96": "images/96.png",
+        "128": "images/128.png",
+        "256": "images/256.png"
+    },
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "Fake or Not?",
+        "default_icon": {
+            "19": "images/19.png",
+            "38": "images/38.png"
+        }
+    },
+    "author": "RCorreia",
+
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+    },
+
+    "permissions": [
+        "clipboardWrite",
+        "tts",
+        "storage",
+        "contextMenus",
+        "unlimitedStorage",
+        "webNavigation",
+        "tabs",
+        "activeTab",
+        "<all_urls>"
+    ],
+
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["content-script.js"]
+    }]
+}

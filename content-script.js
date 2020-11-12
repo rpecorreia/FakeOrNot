@@ -1,5 +1,6 @@
 /*While content scripts are the one's that actually interacts with the webpage */
 
+
 /* para conseguir atravessar as tags html todas */
 
 function getSafeRanges(dangerous) {
@@ -72,21 +73,29 @@ function highlightRange(range) {
         "background-color: greenyellow; display: inline;"
     );
     range.surroundContents(newNode);
+
 }
 
 function highlightSelection() {
-    if (window.getSelection().rangeCount >= 1) {
-        var userSelection = window.getSelection().getRangeAt(0);
-        var safeRanges = getSafeRanges(userSelection);
-        for (var i = 0; i < safeRanges.length; i++) {
-            highlightRange(safeRanges[i]);
-        }
+    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
+    for (var i = 0; i < safeRanges.length; i++) {
+        highlightRange(safeRanges[i]);
     }
+
     /*     var userSelection = window.getSelection().getRangeAt(0);
      */
 
 }
-highlightSelection()
+
+chrome.runtime.onMessage.addListener(function(request) {
+    if (request.action === 'executeCode') {
+        //alert("wtf");
+        highlightSelection();
+
+    }
+});
+
+//highlightSelection();
 
 var selectedText = window.getSelection().toString()
 chrome.extension.sendRequest(selectedText);

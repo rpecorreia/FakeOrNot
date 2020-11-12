@@ -25,7 +25,8 @@
     "author": "RCorreia",
 
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["background.js"],
+        "persistent": true
     },
 
     "permissions": [
@@ -39,12 +40,11 @@
         "activeTab",
         "<all_urls>",
         "http://*/*",
-        "https://*/*",
-        "chrome://favicon/"
+        "https://*/*"
     ],
 
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["content-script.js"]
+        "js": ["content-script.js", "jquery-3.4.1.min.js"]
     }]
 }

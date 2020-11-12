@@ -62,6 +62,15 @@ function removehighlightRed(text) {
     }
 }
 
+document.getElementById('btn').addEventListener('click', function() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(activeTabs) {
+        // WAY 1
+        chrome.tabs.sendMessage(activeTabs[0].id, { action: 'executeCode' });
+    });
+});
+
+
+
 function onSelection(text) {
     document.getElementById("output").innerHTML = text; /* imprime a seleção de texto */
 }

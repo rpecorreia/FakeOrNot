@@ -1,3 +1,5 @@
+/* background scripts are something that run in background and listen for triggers while the user interacts with the chrome browser  */
+
 var selection_callbacks = [];
 
 /*Vai buscar a seleção ao content-script e coloca-a no array*/

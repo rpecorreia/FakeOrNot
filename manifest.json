@@ -25,8 +25,7 @@
     "author": "RCorreia",
 
     "background": {
-        "scripts": ["background.js"],
-        "persistent": true
+        "scripts": ["background.js"]
     },
 
     "permissions": [
@@ -38,7 +37,10 @@
         "webNavigation",
         "tabs",
         "activeTab",
-        "<all_urls>"
+        "<all_urls>",
+        "http://*/*",
+        "https://*/*",
+        "chrome://favicon/"
     ],
 
     "content_scripts": [{

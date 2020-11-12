@@ -69,6 +69,13 @@ document.getElementById('btn').addEventListener('click', function() {
     });
 });
 
+document.getElementById('btn2').addEventListener('click', function() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(activeTabs) {
+        // WAY 1
+        chrome.tabs.sendMessage(activeTabs[0].id, { action: 'executeCode2' });
+    });
+});
+
 
 
 function onSelection(text) {

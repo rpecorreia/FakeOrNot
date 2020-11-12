@@ -76,6 +76,16 @@ function highlightRange(range) {
 
 }
 
+function highlightRange2(range) {
+    var newNode = document.createElement("div");
+    newNode.setAttribute(
+        "style",
+        "background-color: red; display: inline;"
+    );
+    range.surroundContents(newNode);
+
+}
+
 function highlightSelection() {
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
     for (var i = 0; i < safeRanges.length; i++) {
@@ -87,10 +97,29 @@ function highlightSelection() {
 
 }
 
+function highlightSelection2() {
+    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
+    for (var i = 0; i < safeRanges.length; i++) {
+        highlightRange2(safeRanges[i]);
+    }
+
+    /*     var userSelection = window.getSelection().getRangeAt(0);
+     */
+
+}
+
 chrome.runtime.onMessage.addListener(function(request) {
     if (request.action === 'executeCode') {
         //alert("wtf");
         highlightSelection();
+
+    }
+});
+
+chrome.runtime.onMessage.addListener(function(request) {
+    if (request.action === 'executeCode2') {
+        //alert("wtf");
+        highlightSelection2();
 
     }
 });

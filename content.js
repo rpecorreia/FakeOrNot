@@ -2,22 +2,22 @@ var x = 0;
 var y = 0;
 document.getElementById("btn").onclick = function() {
     if (x == 0) {
-        highlight('some')
+        highlight('dummy')
         x = 1;
         y = 0;
     } else {
-        removehighlight('some')
+        removehighlight('dummy')
         x = 0;
     }
 };
 
 document.getElementById("btn2").onclick = function() {
     if (y == 0) {
-        highlightRed('some')
+        highlightRed('dummy')
         y = 1;
         x = 0;
     } else {
-        removehighlightRed('some')
+        removehighlightRed('dummy')
         y = 0;
     }
 };
@@ -76,6 +76,12 @@ document.getElementById('btn2').addEventListener('click', function() {
     });
 });
 
+document.getElementById('btn3').addEventListener('click', function() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(activeTabs) {
+        // WAY 1
+        chrome.tabs.sendMessage(activeTabs[0].id, { action: 'executeCode3' });
+    });
+});
 
 
 function onSelection(text) {

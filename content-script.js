@@ -86,6 +86,16 @@ function highlightRange2(range) {
 
 }
 
+function highlightRange3(range) {
+    var newNode = document.createElement("div");
+    newNode.setAttribute(
+        "style",
+        "background-color: white; display: inline;"
+    );
+    range.surroundContents(newNode);
+
+}
+
 function highlightSelection() {
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
     for (var i = 0; i < safeRanges.length; i++) {
@@ -108,6 +118,17 @@ function highlightSelection2() {
 
 }
 
+function highlightSelection3() {
+    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
+    for (var i = 0; i < safeRanges.length; i++) {
+        highlightRange3(safeRanges[i]);
+    }
+
+    /*     var userSelection = window.getSelection().getRangeAt(0);
+     */
+
+}
+
 chrome.runtime.onMessage.addListener(function(request) {
     if (request.action === 'executeCode') {
         //alert("wtf");
@@ -123,6 +144,15 @@ chrome.runtime.onMessage.addListener(function(request) {
 
     }
 });
+
+chrome.runtime.onMessage.addListener(function(request) {
+    if (request.action === 'executeCode3') {
+        //alert("wtf");
+        highlightSelection3();
+
+    }
+});
+
 
 //highlightSelection();
 

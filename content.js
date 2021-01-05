@@ -1,3 +1,4 @@
+//teste de sublinhar no popup
 var x = 0;
 var y = 0;
 document.getElementById("btn").onclick = function() {
@@ -21,7 +22,7 @@ document.getElementById("btn2").onclick = function() {
         y = 0;
     }
 };
-
+//teste de sublinhar no popup a verde 
 function highlight(text) {
     var inputText = document.getElementById("text");
     var innerHTML = inputText.innerHTML;
@@ -32,6 +33,7 @@ function highlight(text) {
     }
 }
 
+//teste de remover sublinhado verde no popup 
 function removehighlight(text) {
     var inputText = document.getElementById("text");
     var innerHTML = inputText.innerHTML;
@@ -42,6 +44,7 @@ function removehighlight(text) {
     }
 }
 
+//teste de sublinhar no popup a vermelho 
 function highlightRed(text) {
     var inputText = document.getElementById("text");
     var innerHTML = inputText.innerHTML;
@@ -52,6 +55,7 @@ function highlightRed(text) {
     }
 }
 
+//teste de remover sublinhado vermelho no popup 
 function removehighlightRed(text) {
     var inputText = document.getElementById("text");
     var innerHTML = inputText.innerHTML;
@@ -62,6 +66,9 @@ function removehighlightRed(text) {
     }
 }
 
+
+//quando clicamos no thumbsup do popup, envia uma query para o content-script (q interage diretamente com a página web), com a request
+// "executecode", que é executada no content-script
 document.getElementById('btn').addEventListener('click', function() {
     chrome.tabs.query({ active: true, currentWindow: true }, function(activeTabs) {
         // WAY 1

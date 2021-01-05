@@ -9,7 +9,7 @@ function getSelection(callback) {
 };
 
 /*Fica à escuta para novas seleções*/
-chrome.extension.onRequest.addListener(function(request) {
+chrome.extension.onRequest.addListener((request) => {
     var callback = selection_callbacks.shift(); /* o shift() retorna o 1º elemento do array */
     callback(request);
 });

@@ -1,5 +1,148 @@
 /*While content scripts are the one's that actually interacts with the webpage */
 
+//para mostrar o texto da selação no popup, vai buscar a seleção em string e manda um request para o background com essa seleção
+var selectedText = window.getSelection().toString();
+chrome.extension.sendRequest(selectedText);
+
+//array que vai conter todos os excertos selecionados
+arrTexto.push(selectedText);
+
+
+//console.log(countDuplicates(arrTexto));
+
+// conta o número de ocorrências de uma palavra quando estas ocorrem MAIS QUE 1X
+/*
+function countDuplicates(arr) {
+    // O mapa (objeto vazio):
+    const map = Object.create(null);
+
+    for (const str of arr) {
+        map[str] = (map[str] || 0) + 1;
+    }
+
+    const repeatedMap = Object.create(null);
+    for (const prop in map) {
+        if (map[prop] > 1) {
+            repeatedMap[prop] = map[prop];
+        }
+    }
+
+    return repeatedMap;
+}*/
+
+// conta o número de ocorrências de uma palavra 
+/*
+function countDuplicates(arrTexto) {
+    const map = Object.create(null);
+
+    for (const str of arrTexto) {
+        if (map[str]) {
+            // Se já tiver contabilizado, soma '1' ao contador:
+            map[str] += 1;
+        } else {
+            // Caso contrário, iniciamos o contador como '1':
+            map[str] = 1;
+        }
+    }
+
+    return map;
+}
+
+*/
+
+
+function count(str) {
+    var obj = {};
+
+    str.split(/[ ,.]+/).forEach(function(el, i, arr) {
+        obj[el] = obj[el] ? ++obj[el] : 1;
+    });
+
+    return obj;
+}
+
+var parsedObject;
+parsedObject = count(arrTexto.toString());
+
+console.log(parsedObject[5]);
+
+
+
+
+
+/*
+for (var i = 0; i < arrTexto.length; i++) {
+    console.log("arr " + i + " " + arrTexto[i]);
+}
+*/
+
+console.log("1");
+
+chrome.runtime.onMessage.addListener(function(request) {
+    console.log("listening");
+    //se botão de thumbs up clicado
+    if (request.action == 'executeCode') {
+        console.log("2");
+        highlightSelection();
+        console.log("7");
+
+        return;
+    }
+    //se botão de thumbs down clicado
+    else if (request.action == 'executeCode2') {
+        highlightSelection2();
+        return;
+    }
+    //se botão de clear clicado
+    else if (request.action == 'executeCode3') {
+        highlightSelection3();
+        return;
+    }
+
+});
+
+
+
+// função que vai buscar a seleção e corre a função para a sublinhar a verde
+function highlightSelection() {
+    console.log("3");
+    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
+    console.log("4");
+    arrTexto.push(safeRanges);
+    //console.log("saferange: " + safeRanges);
+    //console.log("arr: " + arrTexto);
+
+    for (var i = 0; i < safeRanges.length; i++) {
+        highlightRange(safeRanges[i]);
+    }
+
+    console.log("6");
+
+}
+
+// função que vai buscar a seleção e corre a função para a sublinhar a vermelho
+function highlightSelection2() {
+    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
+    for (var i = 0; i < safeRanges.length; i++) {
+        highlightRange2(safeRanges[i]);
+    }
+
+    /*     var userSelection = window.getSelection().getRangeAt(0);
+     */
+
+}
+
+// função que vai buscar a seleção e corre a função para a sublinhar a branco (transparente não funciona...)
+function highlightSelection3() {
+    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
+    for (var i = 0; i < safeRanges.length; i++) {
+        highlightRange3(safeRanges[i]);
+    }
+
+    /*     var userSelection = window.getSelection().getRangeAt(0);
+     */
+
+}
 
 /* para conseguir atravessar as tags html todas */
 
@@ -66,16 +209,19 @@ function getSafeRanges(dangerous) {
     return response;
 }
 
+
+//função que sublinha a verde na página web
 function highlightRange(range) {
+    console.log("5");
     var newNode = document.createElement("div");
     newNode.setAttribute(
         "style",
         "background-color: greenyellow; display: inline;"
     );
     range.surroundContents(newNode);
-
 }
 
+//função que sublinha a vermelho na página web
 function highlightRange2(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
@@ -86,6 +232,7 @@ function highlightRange2(range) {
 
 }
 
+//função que sublinha a branco (o transparente não funciona)
 function highlightRange3(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
@@ -95,66 +242,3 @@ function highlightRange3(range) {
     range.surroundContents(newNode);
 
 }
-
-function highlightSelection() {
-    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
-    for (var i = 0; i < safeRanges.length; i++) {
-        highlightRange(safeRanges[i]);
-    }
-
-    /*     var userSelection = window.getSelection().getRangeAt(0);
-     */
-
-}
-
-function highlightSelection2() {
-    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
-    for (var i = 0; i < safeRanges.length; i++) {
-        highlightRange2(safeRanges[i]);
-    }
-
-    /*     var userSelection = window.getSelection().getRangeAt(0);
-     */
-
-}
-
-function highlightSelection3() {
-    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
-    for (var i = 0; i < safeRanges.length; i++) {
-        highlightRange3(safeRanges[i]);
-    }
-
-    /*     var userSelection = window.getSelection().getRangeAt(0);
-     */
-
-}
-
-chrome.runtime.onMessage.addListener(function(request) {
-    if (request.action === 'executeCode') {
-        //alert("wtf");
-        highlightSelection();
-
-    }
-});
-
-chrome.runtime.onMessage.addListener(function(request) {
-    if (request.action === 'executeCode2') {
-        //alert("wtf");
-        highlightSelection2();
-
-    }
-});
-
-chrome.runtime.onMessage.addListener(function(request) {
-    if (request.action === 'executeCode3') {
-        //alert("wtf");
-        highlightSelection3();
-
-    }
-});
-
-
-//highlightSelection();
-
-var selectedText = window.getSelection().toString()
-chrome.extension.sendRequest(selectedText);

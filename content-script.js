@@ -1,12 +1,18 @@
 /*While content scripts are the one's that actually interacts with the webpage */
 
 //para mostrar o texto da selação no popup, vai buscar a seleção em string e manda um request para o background com essa seleção
-var selectedText = window.getSelection().toString();
-chrome.extension.sendRequest(selectedText);
+//var selectedText = window.getSelection().toString();
+//chrome.extension.sendRequest(selectedText);   
+
+/*
+chrome.runtime.sendMessage({seltext: selectedText}, function(response) {
+    console.log(response.response);
+  });*/
 
 //array que vai conter todos os excertos selecionados
-arrTexto.push(selectedText);
+//arrTexto.push(selectedText);
 
+//chrome.extension.sendRequest(arrTexto);         
 
 //console.log(countDuplicates(arrTexto));
 
@@ -26,7 +32,6 @@ function countDuplicates(arr) {
             repeatedMap[prop] = map[prop];
         }
     }
-
     return repeatedMap;
 }*/
 
@@ -47,34 +52,30 @@ function countDuplicates(arrTexto) {
 
     return map;
 }
-
 */
-
 
 function count(str) {
     var obj = {};
 
-    str.split(/[ ,.]+/).forEach(function(el, i, arr) {
+    str.split(/[ ,.]+/).forEach(function(el) {
         obj[el] = obj[el] ? ++obj[el] : 1;
     });
 
     return obj;
 }
 
+
+/*
 var parsedObject;
 parsedObject = count(arrTexto.toString());
 
 console.log(parsedObject[5]);
 
+*/
 
-
-
-
-/*
 for (var i = 0; i < arrTexto.length; i++) {
     console.log("arr " + i + " " + arrTexto[i]);
 }
-*/
 
 console.log("1");
 
@@ -82,6 +83,12 @@ chrome.runtime.onMessage.addListener(function(request) {
     console.log("listening");
     //se botão de thumbs up clicado
     if (request.action == 'executeCode') {
+        var sel = window.getSelection().toString();
+        if(sel.length)
+            chrome.extension.sendRequest({'message':'setText','data': sel},function(response){})
+        arrTexto.push(sel);
+        console.log(count(arrTexto.toString()));
+        console.log("thumbs up: ", sel);
         console.log("2");
         highlightSelection();
         console.log("7");
@@ -100,8 +107,6 @@ chrome.runtime.onMessage.addListener(function(request) {
     }
 
 });
-
-
 
 // função que vai buscar a seleção e corre a função para a sublinhar a verde
 function highlightSelection() {
@@ -203,7 +208,7 @@ function getSafeRanges(dangerous) {
 
     // Concat
     rs.push(xm);
-    response = rs.concat(re);
+    let response = rs.concat(re);
 
     // Send to Console
     return response;

@@ -22,7 +22,7 @@
             "38": "images/38.png"
         }
     },
-    "author": "RCorreia",
+    "author": "Rita Correia",
 
     "background": {
         "scripts": ["background.js"],
@@ -39,8 +39,7 @@
         "tabs",
         "activeTab",
         "<all_urls>",
-        "http://*/*",
-        "https://*/*"
+        "*://*/*"
     ],
 
     "content_scripts": [{

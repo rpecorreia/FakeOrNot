@@ -91,7 +91,11 @@ document.getElementById('btn3').addEventListener('click', function() {
 });
 
 
-function onSelection(text) {
-    document.getElementById("output").innerHTML = text; /* imprime a seleção de texto */
+function onSelection(selection) {
+    alert(selection);
+    document.getElementById("output").innerHTML = selection; /* imprime a seleção de texto */
 }
-chrome.extension.getBackgroundPage().getSelection(onSelection); /* vai buscar a seleção de texto ao background.js */
+
+var gettingPage = chrome.extension.getBackgroundPage();
+const selection = gettingPage.foo();
+onSelection(selection);

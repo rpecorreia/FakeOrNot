@@ -1,38 +1,11 @@
 /* background scripts are something that run in background and listen for triggers while the user interacts with the chrome browser  */
 
-/*
-var selection_callbacks = [];
-
-
-function getSelection(callback) {
-    console.log(callback);
-    selection_callbacks.push(callback);
-    chrome.tabs.executeScript(null, { file: "content-script.js" });
-};
-
-
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.seltext){
-        //console.log(request.seltext);
-        arrTexto.push(request.seltext);
-        console.log(arrTexto);
-        sendResponse({response: "thanks! :)"});
-      }
-
-    }
-  );
-*/
-
 var arrTexto = [];
-
-  function foo() {
-      return arrTexto;
-}
-
-
-
 var seltext = null;
+
+function foo() {
+    return arrTexto;
+}
  
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 {
@@ -42,7 +15,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
             window.seltext = request.data;
             arrTexto.push(request.data);
             console.log(request.data);
-        break;
+            sendResponse({resp: "Selection sent to bg script! :)"});
+            break;
          
         default:
             sendResponse({data: 'Invalid arguments'});

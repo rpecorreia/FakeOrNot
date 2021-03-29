@@ -1,2 +1,2 @@
 var arrTexto = [];
-
+var arrThumbsUp = [];

@@ -1,59 +1,3 @@
-/*While content scripts are the one's that actually interacts with the webpage */
-
-//para mostrar o texto da selação no popup, vai buscar a seleção em string e manda um request para o background com essa seleção
-//var selectedText = window.getSelection().toString();
-//chrome.extension.sendRequest(selectedText);   
-
-/*
-chrome.runtime.sendMessage({seltext: selectedText}, function(response) {
-    console.log(response.response);
-  });*/
-
-//array que vai conter todos os excertos selecionados
-//arrTexto.push(selectedText);
-
-//chrome.extension.sendRequest(arrTexto);         
-
-//console.log(countDuplicates(arrTexto));
-
-// conta o número de ocorrências de uma palavra quando estas ocorrem MAIS QUE 1X
-/*
-function countDuplicates(arr) {
-    // O mapa (objeto vazio):
-    const map = Object.create(null);
-
-    for (const str of arr) {
-        map[str] = (map[str] || 0) + 1;
-    }
-
-    const repeatedMap = Object.create(null);
-    for (const prop in map) {
-        if (map[prop] > 1) {
-            repeatedMap[prop] = map[prop];
-        }
-    }
-    return repeatedMap;
-}*/
-
-// conta o número de ocorrências de uma palavra 
-/*
-function countDuplicates(arrTexto) {
-    const map = Object.create(null);
-
-    for (const str of arrTexto) {
-        if (map[str]) {
-            // Se já tiver contabilizado, soma '1' ao contador:
-            map[str] += 1;
-        } else {
-            // Caso contrário, iniciamos o contador como '1':
-            map[str] = 1;
-        }
-    }
-
-    return map;
-}
-*/
-
 function count(str) {
     var obj = {};
 
@@ -64,19 +8,6 @@ function count(str) {
     return obj;
 }
 
-
-/*
-var parsedObject;
-parsedObject = count(arrTexto.toString());
-
-console.log(parsedObject[5]);
-
-*/
-
-for (var i = 0; i < arrTexto.length; i++) {
-    console.log("arr " + i + " " + arrTexto[i]);
-}
-
 console.log("1");
 
 chrome.runtime.onMessage.addListener(function(request) {
@@ -85,10 +16,10 @@ chrome.runtime.onMessage.addListener(function(request) {
     if (request.action == 'executeCode') {
         var sel = window.getSelection().toString();
         if(sel.length)
-            chrome.extension.sendRequest({'message':'setText','data': sel},function(response){})
-        arrTexto.push(sel);
-        console.log(count(arrTexto.toString()));
-        console.log("thumbs up: ", sel);
+            chrome.extension.sendRequest({'message':'setText','data': sel},function(response){console.log(response.resp)})
+        arrThumbsUp.push(sel);
+        console.log(count(arrThumbsUp.toString()));
+        console.log("thumbs up: ", arrThumbsUp);
         console.log("2");
         highlightSelection();
         console.log("7");
@@ -113,7 +44,7 @@ function highlightSelection() {
     console.log("3");
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
     console.log("4");
-    arrTexto.push(safeRanges);
+    //arrTexto.push(safeRanges);
     //console.log("saferange: " + safeRanges);
     //console.log("arr: " + arrTexto);
 
@@ -131,10 +62,6 @@ function highlightSelection2() {
     for (var i = 0; i < safeRanges.length; i++) {
         highlightRange2(safeRanges[i]);
     }
-
-    /*     var userSelection = window.getSelection().getRangeAt(0);
-     */
-
 }
 
 // função que vai buscar a seleção e corre a função para a sublinhar a branco (transparente não funciona...)
@@ -143,10 +70,6 @@ function highlightSelection3() {
     for (var i = 0; i < safeRanges.length; i++) {
         highlightRange3(safeRanges[i]);
     }
-
-    /*     var userSelection = window.getSelection().getRangeAt(0);
-     */
-
 }
 
 /* para conseguir atravessar as tags html todas */

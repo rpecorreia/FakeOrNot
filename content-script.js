@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener(function(request) {
     if (request.action == 'executeCode') {
         var sel = window.getSelection().toString();
         if(sel.length)
-            chrome.extension.sendRequest({'message':'setText','data': sel},function(response){console.log(response.resp)})
+            chrome.extension.sendRequest({'message':'setTextTumbsUp','data': sel},function(response){console.log(response.resp)})
         arrThumbsUp.push(sel);
         console.log(count(arrThumbsUp.toString()));
         console.log("thumbs up: ", arrThumbsUp);
@@ -28,6 +28,12 @@ chrome.runtime.onMessage.addListener(function(request) {
     }
     //se botão de thumbs down clicado
     else if (request.action == 'executeCode2') {
+        var sel = window.getSelection().toString();
+        if(sel.length)
+            chrome.extension.sendRequest({'message':'setTextTumbsDown','data': sel},function(response){console.log(response.resp)})
+        arrThumbsDown.push(sel);
+        console.log(count(arrThumbsDown.toString()));
+        console.log("thumbs down: ", arrThumbsDown);
         highlightSelection2();
         return;
     }

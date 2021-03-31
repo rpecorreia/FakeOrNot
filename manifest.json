@@ -39,7 +39,8 @@
         "tabs",
         "activeTab",
         "<all_urls>",
-        "*://*/*"
+        "*://*/*",
+        "http://localhost/*"
     ],
 
     "content_scripts": [{

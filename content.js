@@ -91,11 +91,19 @@ document.getElementById('btn3').addEventListener('click', function() {
 });
 
 
-function onSelection(selection) {
-    alert(selection);
-    document.getElementById("output").innerHTML = selection; /* imprime a seleção de texto */
+function onSelection(selection1) {
+    alert(selection1);
+    document.getElementById("output").innerHTML = selection1; /* imprime a seleção de texto */
+}
+
+function onSelection2(selection) {
+    alert(selection2);
+    document.getElementById("output2").innerHTML = selection2; /* imprime a seleção de texto */
 }
 
 var gettingPage = chrome.extension.getBackgroundPage();
-const selection = gettingPage.foo();
-onSelection(selection);
+const selection1 = gettingPage.TU();
+onSelection(selection1);
+
+const selection2 = gettingPage.TD();
+onSelection2(selection2);

@@ -1,21 +1,36 @@
 /* background scripts are something that run in background and listen for triggers while the user interacts with the chrome browser  */
 
 var arrTexto = [];
+var arrThumbsUp = [];
+var arrThumbsDown = [];
 var seltext = null;
 
-function foo() {
-    return arrTexto;
+function TU() {
+    return arrThumbsUp;
+}
+
+function TD() {
+    return arrThumbsDown;
 }
  
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 {
     switch(request.message)
     {
-        case 'setText':
+        case 'setTextTumbsUp':
             window.seltext = request.data;
             arrTexto.push(request.data);
-            console.log(request.data);
-            sendResponse({resp: "Selection sent to bg script! :)"});
+            arrThumbsUp.push(request.data);
+            console.log(arrThumbsUp);
+            sendResponse({resp: "Selection (tu) sent to bg script! :)"});
+            break;
+
+        case 'setTextTumbsDown':
+            window.seltext = request.data;
+            arrTexto.push(request.data);
+            arrThumbsDown.push(request.data);
+            console.log(arrThumbsDown);
+            sendResponse({resp: "Selection (td) sent to bg script! :)"});
             break;
          
         default:

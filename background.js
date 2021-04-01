@@ -22,6 +22,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
             arrTexto.push(request.data);
             arrThumbsUp.push(request.data);
             console.log(arrThumbsUp);
+            saveup(request.data);
             sendResponse({resp: "Selection (tu) sent to bg script! :)"});
             break;
 
@@ -30,6 +31,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
             arrTexto.push(request.data);
             arrThumbsDown.push(request.data);
             console.log(arrThumbsDown);
+            savedown(request.data);
             sendResponse({resp: "Selection (td) sent to bg script! :)"});
             break;
          
@@ -38,17 +40,32 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
         break;
     }
 });
-/*
- 
-function savetext(info,tab)
+
+
+function saveup(text)
 {
+    console.log("dataaa: ", text)
     var jax = new XMLHttpRequest();
-    jax.open("POST","http://localhost/text/");
+    var params = "text="+text;
+    jax.open("POST","http://localhost:3000/InsertTU", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-    jax.send("text="+seltext);
+    jax.send(params);
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
 }
- 
+
+function savedown(text)
+{
+    console.log("dataaa: ", text)
+    var jax = new XMLHttpRequest();
+    var params = "text="+text;
+    jax.open("POST","http://localhost:3000/InsertTD", true);
+    jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+    jax.send(params);
+    jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
+}
+
+
+/*
 var contexts = ["selection"];
 for (var i = 0; i < contexts.length; i++)
 {

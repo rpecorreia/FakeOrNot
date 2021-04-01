@@ -160,7 +160,7 @@ function highlightRange2(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
         "style",
-        "background-color: red; display: inline;"
+        "background-color: #ff8585; display: inline;"
     );
     range.surroundContents(newNode);
 

@@ -92,12 +92,12 @@ document.getElementById('btn3').addEventListener('click', function() {
 
 
 function onSelection(selection1) {
-    alert(selection1);
+    //alert(selection1);
     document.getElementById("output").innerHTML = selection1; /* imprime a seleção de texto */
 }
 
 function onSelection2(selection) {
-    alert(selection2);
+    //alert(selection2);
     document.getElementById("output2").innerHTML = selection2; /* imprime a seleção de texto */
 }
 

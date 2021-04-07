@@ -37,12 +37,6 @@ chrome.runtime.onMessage.addListener(function(request) {
         highlightSelection2();
         return;
     }
-    //se botão de clear clicado
-    else if (request.action == 'executeCode3') {
-        highlightSelection3();
-        return;
-    }
-
 });
 
 // função que vai buscar a seleção e corre a função para a sublinhar a verde

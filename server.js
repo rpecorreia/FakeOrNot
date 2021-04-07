@@ -64,21 +64,24 @@ app.get('/TD', (req, res) => {
 
 
 app.post('/InsertTU', (req, res) => {
-  var text = req.body.text;
-  console.log("\ntexto: ", text)
-
-  // handling apostrophe in sql query
-  let s_aux = "";
+    var text = req.body.text;
+    console.log("\ntexto:", text);
+    
+   // handling apostrophe in sql query
+   if (text.includes("'")){
+    var s_aux = "";
     for (let i = 0; i<text.length; i++){
         if (text[i] == "'"){
             s_aux += text[i];
         }
-    s_aux += text[i];
+        s_aux += text[i];
     }
-  
-  console.log("\ntexto 2: ", s_aux)
+    text = s_aux;
+}
+    
+    console.log("\ntexto ALT: ", text);
 
-  let sql = "INSERT INTO `Up` (`text`) VALUES ('"+s_aux+"')"; 
+  let sql = "INSERT INTO `Up` (`text`) VALUES ('"+text+"')"; 
 
 	connection.query(sql, (err,result)=>{
 		if(err) throw err;
@@ -89,20 +92,23 @@ app.post('/InsertTU', (req, res) => {
 
 app.post('/InsertTD', (req, res) => {
     var text = req.body.text;
-    console.log("\ntexto:", text)
+    console.log("\ntexto:", text);
     
     // handling apostrophe in sql query
-    let s_aux = "";
-    for (let i = 0; i<text.length; i++){
-        if (text[i] == "'"){
+    if (text.includes("'")){
+        var s_aux = "";
+        for (let i = 0; i<text.length; i++){
+            if (text[i] == "'"){
+                s_aux += text[i];
+            }
             s_aux += text[i];
         }
-    s_aux += text[i];
+        text = s_aux;
     }
+    
+    console.log("\ntexto ALT: ", text);
 
-    console.log("\ntexto 2: ", s_aux)
-
-    let sql = "INSERT INTO `Down` (`text`) VALUES ('"+s_aux+"');"
+    let sql = "INSERT INTO `Down` (`text`) VALUES ('"+text+"');"
   
       connection.query(sql, (err,result)=>{
           if(err) throw err;

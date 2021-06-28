@@ -6,10 +6,7 @@ const mysql = require('mysql2');
 var bodyParser = require('body-parser');
 const app = express()
 const port = 3000
-
-
-//app.use(express.static('public'));
-//app.use(bodyParser.json({limit: '20mb'}));
+const bcrypt = require('bcrypt');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -118,6 +115,87 @@ app.post('/InsertTD', (req, res) => {
   })
 
 
+// Login and logout system
+
+//middleware function to do the authorization/check of users credentials
+
+function authenticate_user(req, res, next) {
+  let creds = req.get('Authorization');
+  console.log("aqui1", creds);
+
+  // creds will return something like "Basic klsfkjs". We dont need the 'Basic' word and the space. Basic é um tipo comum de autenticação.
+  // Só queremos as credenciais que vêm a seguir, por isso:
+  creds = creds.substr(creds.indexOf(' ') + 1); // vai começar no inicio das credenciais.
+  console.log("aqui2", creds);
+
+  // so now we need to convert it back to binary or visually for us ascii.
+  creds = Buffer.from(creds, 'base64').toString('binary');
+  console.log("aqui3", creds);
+
+  // so the previous line should give us something like "rita@test.com:123456789"
+  // so now we want to split up the email and the pass. So:
+  creds = creds.split(':'); //this will give us an array with the email and the pass.
+  console.log("aqui4", creds);
+
+  var email = creds[0];
+  var pass = creds[1];
+  
+  /* Here we should make a DB check of credentials */
+
+  try{
+    let user = "SELECT password from User WHERE email = '"+email+"' ";
+
+    if(user){
+      const validPass = bcrypt.compare(pass, user);
+      if(validPass){
+        connection.query(user, (err,result)=>{
+          if(err) throw err;
+          console.log(result);
+          //res.send(result);
+          res.status(200).end(); //authorized
+          next();
+      });
+      }
+      else{
+        console.log("não autorizado")
+        res.status(401).end() //401 is unauthorized
+      }
+    }
+    else{
+      console.log("não existente")
+      res.status(404).json('User not found!');
+    }
+
+  }
+  catch(e){
+    console.log(e);
+    res.status(401).end();
+  }
+
+}
+
+
+//if the user authenticates, they'll have access to the rest of the code.
+app.get('/login', authenticate_user, (req, res) => {
+  res.status(200).end();
+});
+
+app.get('/logout', authenticate_user, (req, res) => {
+  res.status(200).end();
+});
+
+app.use((req, res, next) => {
+  res.status(400).send("Route not found");
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).send(err.message || "Problem.")
+});
+
+
+
+
+// Port
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })

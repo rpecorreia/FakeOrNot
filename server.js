@@ -32,6 +32,7 @@ connection.connect(function(err){
   
 });
 
+
 //isto é feito com o express
 app.get('/', function (req, res) {
     res.send('Hello World')
@@ -63,9 +64,13 @@ app.get('/TD', (req, res) => {
 app.post('/InsertTU', (req, res) => {
     var text = req.body.text;
     console.log("\ntexto:", text);
+    var email = req.body.creds;
+    console.log("\nemail:", email);
+    var user_id = 0;
+
     
    // handling apostrophe in sql query
-   if (text.includes("'")){
+  if (text.includes("'")){
     var s_aux = "";
     for (let i = 0; i<text.length; i++){
         if (text[i] == "'"){
@@ -74,21 +79,43 @@ app.post('/InsertTU', (req, res) => {
         s_aux += text[i];
     }
     text = s_aux;
-}
+  }
     
-    console.log("\ntexto ALT: ", text);
+  console.log("\ntexto ALT: ", text);
+    
+  function get_info(callback){
 
-  let sql = "INSERT INTO `Up` (`text`) VALUES ('"+text+"')"; 
+    var sql = "SELECT `id` FROM `User` WHERE `email` = '"+email+"'";
+    connection.query(sql, function(err, result){
+          if (err){ 
+            throw err;
+          }
+          console.log(result[0]); // good
+          user_id = result[0];  // Scope is larger than function
+          return callback(result[0]);
+  })
+}
 
-	connection.query(sql, (err,result)=>{
-		if(err) throw err;
-		console.log(result);
-		res.send(result);
-	});
+  get_info(function(result){
+    user_id = result.id;
+    console.log("o que és??", user_id)
+
+    var sql = "INSERT INTO `Up` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
+    connection.query(sql, (err,result)=>{
+      if(err) throw err;
+      console.log(result);
+      res.send(result);
+    });
+  });
+
 });
+
 
 app.post('/InsertTD', (req, res) => {
     var text = req.body.text;
+    var email = req.body.creds;
+    var user_id = 0;
+
     console.log("\ntexto:", text);
     
     // handling apostrophe in sql query
@@ -105,13 +132,30 @@ app.post('/InsertTD', (req, res) => {
     
     console.log("\ntexto ALT: ", text);
 
-    let sql = "INSERT INTO `Down` (`text`) VALUES ('"+text+"');"
+    function get_info(callback){
+
+      var sql = "SELECT `id` FROM `User` WHERE `email` = '"+email+"'";
+      connection.query(sql, function(err, result){
+            if (err){ 
+              throw err;
+            }
+            console.log(result[0]); // good
+            user_id = result[0];  // Scope is larger than function
+            return callback(result[0]);
+    })
+  }
   
+    get_info(function(result){
+      user_id = result.id;
+      console.log("o que és??", user_id)
+  
+      var sql = "INSERT INTO `Down` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
       connection.query(sql, (err,result)=>{
-          if(err) throw err;
-          console.log(result);
-          res.send(result);
+        if(err) throw err;
+        console.log(result);
+        res.send(result);
       });
+    });
   })
 
 
@@ -139,7 +183,7 @@ function authenticate_user(req, res, next) {
 
   var email = creds[0];
   var pass = creds[1];
-  
+
   /* Here we should make a DB check of credentials */
 
   try{

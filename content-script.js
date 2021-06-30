@@ -8,8 +8,6 @@ function count(str) {
     return obj;
 }
 
-console.log("1");
-
 chrome.runtime.onMessage.addListener(function(request) {
     console.log("listening");
     //se botão de thumbs up clicado
@@ -20,9 +18,7 @@ chrome.runtime.onMessage.addListener(function(request) {
         arrThumbsUp.push(sel);
         console.log(count(arrThumbsUp.toString()));
         console.log("thumbs up: ", arrThumbsUp);
-        console.log("2");
         highlightSelection();
-        console.log("7");
 
         return;
     }
@@ -41,9 +37,7 @@ chrome.runtime.onMessage.addListener(function(request) {
 
 // função que vai buscar a seleção e corre a função para a sublinhar a verde
 function highlightSelection() {
-    console.log("3");
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
-    console.log("4");
     //arrTexto.push(safeRanges);
     //console.log("saferange: " + safeRanges);
     //console.log("arr: " + arrTexto);
@@ -51,9 +45,6 @@ function highlightSelection() {
     for (var i = 0; i < safeRanges.length; i++) {
         highlightRange(safeRanges[i]);
     }
-
-    console.log("6");
-
 }
 
 // função que vai buscar a seleção e corre a função para a sublinhar a vermelho
@@ -137,10 +128,8 @@ function getSafeRanges(dangerous) {
     return response;
 }
 
-
 //função que sublinha a verde na página web
 function highlightRange(range) {
-    console.log("5");
     var newNode = document.createElement("div");
     newNode.setAttribute(
         "style",

@@ -5,6 +5,7 @@ var arrThumbsUp = [];
 var arrThumbsDown = [];
 var seltext = null;
 let user_signed_in = false;
+var creds = "";
 
 /*
 let userLoggedIn = false
@@ -150,6 +151,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
     switch(request.message)
     {
         case 'login':
+            creds = request.payload.email;
+            console.log("CREDSSSSSSS", creds);
             flip_user_status(true, request.payload)
                 .then(res => sendResponse(res)) //send the final response and close the msg line.
                 .catch(err => console.log(err));
@@ -170,7 +173,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
             arrTexto.push(request.data);
             arrThumbsUp.push(request.data);
             console.log(arrThumbsUp);
-            saveup(request.data);
+            saveup(request.data, creds);
             sendResponse({resp: "Selection (tu) sent to bg script! :)"});
             break;
 
@@ -179,7 +182,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
             arrTexto.push(request.data);
             arrThumbsDown.push(request.data);
             console.log(arrThumbsDown);
-            savedown(request.data);
+            savedown(request.data, creds);
             sendResponse({resp: "Selection (td) sent to bg script! :)"});
             break;
          
@@ -190,22 +193,24 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 });
 
 
-function saveup(text)
+function saveup(text, creds)
 {
     console.log("dataaa: ", text)
+    console.log("email: ", creds)
     var jax = new XMLHttpRequest();
-    var params = "text="+text;
+    var params = "text="+text+"&creds="+creds;
     jax.open("POST","http://localhost:3000/InsertTU", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     jax.send(params);
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
 }
 
-function savedown(text)
+function savedown(text, creds)
 {
     console.log("dataaa: ", text)
+    console.log("email: ", creds)
     var jax = new XMLHttpRequest();
-    var params = "text="+text;
+    var params = "text="+text+"&creds="+creds;
     jax.open("POST","http://localhost:3000/InsertTD", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     jax.send(params);

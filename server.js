@@ -1,18 +1,28 @@
 //para não estar a reeniciar o servidor.. ver e ler npm nodemon.
-const express = require('express')
+const express = require('express');
+const session = require('express-session')
+
 //utilize o mysql2
 //https://www.npmjs.com/package/mysql2
 const mysql = require('mysql2');
 var bodyParser = require('body-parser');
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 const bcrypt = require('bcrypt');
+const path = require('path');
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse application/json
 app.use(bodyParser.json())
+
+
+app.use(session({secret:'Keep it secret'
+,name:'uniqueSessionID'
+,saveUninitialized:false}))
+
 
 // create the connection to database
 const connection = mysql.createConnection({
@@ -38,20 +48,9 @@ app.get('/', function (req, res) {
     res.send('Hello World')
   })
 
-app.get('/TU', (req, res) => {
+app.get('/Fake', (req, res) => {
 
-	let sql = 'SELECT * FROM Up';
-
-	connection.query(sql, (err,result)=>{
-		if(err) throw err;
-
-		res.send(result);
-	});
-});
-
-app.get('/TD', (req, res) => {
-
-	let sql = 'SELECT * FROM Down';
+	let sql = 'SELECT * FROM Fake';
 
 	connection.query(sql, (err,result)=>{
 		if(err) throw err;
@@ -60,8 +59,19 @@ app.get('/TD', (req, res) => {
 	});
 });
 
+app.get('/Questionable', (req, res) => {
 
-app.post('/InsertTU', (req, res) => {
+	let sql = 'SELECT * FROM Questionable';
+
+	connection.query(sql, (err,result)=>{
+		if(err) throw err;
+
+		res.send(result);
+	});
+});
+
+
+app.post('/InsertFake', (req, res) => {
     var text = req.body.text;
     console.log("\ntexto:", text);
     var email = req.body.creds;
@@ -91,7 +101,7 @@ app.post('/InsertTU', (req, res) => {
             throw err;
           }
           console.log(result[0]); 
-          user_id = result[0]; 
+          user_id = result[0];  
           return callback(result[0]);
   })
 }
@@ -100,18 +110,17 @@ app.post('/InsertTU', (req, res) => {
     user_id = result.id;
     console.log("o que és??", user_id)
 
-    var sql = "INSERT INTO `Up` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
+    var sql = "INSERT INTO `Fake` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
     connection.query(sql, (err,result)=>{
       if(err) throw err;
       console.log(result);
       res.send(result);
     });
   });
-
 });
 
 
-app.post('/InsertTD', (req, res) => {
+app.post('/InsertQuestionable', (req, res) => {
     var text = req.body.text;
     var email = req.body.creds;
     var user_id = 0;
@@ -147,9 +156,8 @@ app.post('/InsertTD', (req, res) => {
   
     get_info(function(result){
       user_id = result.id;
-      console.log("o que és??", user_id)
   
-      var sql = "INSERT INTO `Down` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
+      var sql = "INSERT INTO `Questionable` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
       connection.query(sql, (err,result)=>{
         if(err) throw err;
         console.log(result);
@@ -165,21 +173,17 @@ app.post('/InsertTD', (req, res) => {
 
 function authenticate_user(req, res, next) {
   let creds = req.get('Authorization');
-  console.log("aqui1", creds);
 
   // creds will return something like "Basic klsfkjs". We dont need the 'Basic' word and the space. Basic é um tipo comum de autenticação.
   // Só queremos as credenciais que vêm a seguir, por isso:
   creds = creds.substr(creds.indexOf(' ') + 1); // vai começar no inicio das credenciais.
-  console.log("aqui2", creds);
 
   // so now we need to convert it back to binary or visually for us ascii.
   creds = Buffer.from(creds, 'base64').toString('binary');
-  console.log("aqui3", creds);
 
   // so the previous line should give us something like "rita@test.com:123456789"
   // so now we want to split up the email and the pass. So:
   creds = creds.split(':'); //this will give us an array with the email and the pass.
-  console.log("aqui4", creds);
 
   var email = creds[0];
   var pass = creds[1];
@@ -215,13 +219,13 @@ function authenticate_user(req, res, next) {
     console.log(e);
     res.status(401).end();
   }
-
 }
 
 
 //if the user authenticates, they'll have access to the rest of the code.
 app.get('/login', authenticate_user, (req, res) => {
-  res.status(200).end();
+    res.status(200).end();
+
 });
 
 app.get('/logout', authenticate_user, (req, res) => {
@@ -235,7 +239,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.message || "Problem.")
 });
-
 
 
 

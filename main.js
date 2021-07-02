@@ -1,3 +1,3 @@
 var arrTexto = [];
-var arrThumbsUp = [];
-var arrThumbsDown = [];
+var arrFake = [];
+var arrQuestionable = [];

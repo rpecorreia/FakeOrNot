@@ -14,10 +14,10 @@ chrome.runtime.onMessage.addListener(function(request) {
     if (request.action == 'executeCode') {
         var sel = window.getSelection().toString();
         if(sel.length)
-            chrome.extension.sendRequest({'message':'setTextTumbsUp','data': sel},function(response){console.log(response.resp)})
-        arrThumbsUp.push(sel);
-        console.log(count(arrThumbsUp.toString()));
-        console.log("thumbs up: ", arrThumbsUp);
+            chrome.extension.sendRequest({'message':'setTextFake','data': sel},function(response){console.log(response.resp)})
+        arrFake.push(sel);
+        console.log(count(arrFake.toString()));
+        console.log("fake: ", arrFake);
         highlightSelection();
 
         return;
@@ -26,10 +26,10 @@ chrome.runtime.onMessage.addListener(function(request) {
     else if (request.action == 'executeCode2') {
         var sel = window.getSelection().toString();
         if(sel.length)
-            chrome.extension.sendRequest({'message':'setTextTumbsDown','data': sel},function(response){console.log(response.resp)})
-        arrThumbsDown.push(sel);
-        console.log(count(arrThumbsDown.toString()));
-        console.log("thumbs down: ", arrThumbsDown);
+            chrome.extension.sendRequest({'message':'setTextQuestionable','data': sel},function(response){console.log(response.resp)})
+        arrQuestionable.push(sel);
+        console.log(count(arrQuestionable.toString()));
+        console.log("questionable: ", arrQuestionable);
         highlightSelection2();
         return;
     }
@@ -52,14 +52,6 @@ function highlightSelection2() {
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
     for (var i = 0; i < safeRanges.length; i++) {
         highlightRange2(safeRanges[i]);
-    }
-}
-
-// função que vai buscar a seleção e corre a função para a sublinhar a branco (transparente não funciona...)
-function highlightSelection3() {
-    var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
-    for (var i = 0; i < safeRanges.length; i++) {
-        highlightRange3(safeRanges[i]);
     }
 }
 
@@ -133,7 +125,7 @@ function highlightRange(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
         "style",
-        "background-color: greenyellow; display: inline;"
+        "background-color: #ff8585; display: inline;"
     );
     range.surroundContents(newNode);
 }
@@ -143,18 +135,7 @@ function highlightRange2(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
         "style",
-        "background-color: #ff8585; display: inline;"
-    );
-    range.surroundContents(newNode);
-
-}
-
-//função que sublinha a branco (o transparente não funciona)
-function highlightRange3(range) {
-    var newNode = document.createElement("div");
-    newNode.setAttribute(
-        "style",
-        "background-color: white; display: inline;"
+        "background-color: #ebeb1e; display: inline;"
     );
     range.surroundContents(newNode);
 

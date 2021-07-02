@@ -21,14 +21,14 @@ function onSelection(selection1) {
     document.getElementById("output").innerHTML = selection1; /* imprime a seleção de texto */
 }
 
-function onSelection2(selection) {
+function onSelection2(selection2) {
     //alert(selection2);
     document.getElementById("output2").innerHTML = selection2; /* imprime a seleção de texto */
 }
 
 var gettingPage = chrome.extension.getBackgroundPage();
-const selection1 = gettingPage.TU();
+const selection1 = gettingPage.Fake(); //fake
 onSelection(selection1);
 
-const selection2 = gettingPage.TD();
+const selection2 = gettingPage.Questionable(); //questionable
 onSelection2(selection2);

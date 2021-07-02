@@ -1,8 +1,8 @@
 /* background scripts are something that run in background and listen for triggers while the user interacts with the chrome browser  */
 
 var arrTexto = [];
-var arrThumbsUp = [];
-var arrThumbsDown = [];
+var arrFake = [];
+var arrQuestionable = [];
 var seltext = null;
 let user_signed_in = false;
 var creds = "";
@@ -138,12 +138,12 @@ function flip_user_status(signIn, user_info){
 //btoa: binary to ascii -> encodes in 64 bit the email and pass. não mandamos a pass em plaintext
 //por ex, se eu enviar rita@test.com:123, ele vai codificar para "cml0YUB0ZXN0LmNvbToxMjM="
 
-function TU() {
-    return arrThumbsUp;
+function Fake() {
+    return arrFake;
 }
 
-function TD() {
-    return arrThumbsDown;
+function Questionable() {
+    return arrQuestionable;
 }
  
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
@@ -168,22 +168,22 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
         case 'userStatus':
             break;
 
-        case 'setTextTumbsUp':
+        case 'setTextFake':
             window.seltext = request.data;
             arrTexto.push(request.data);
-            arrThumbsUp.push(request.data);
-            console.log(arrThumbsUp);
-            saveup(request.data, creds);
-            sendResponse({resp: "Selection (tu) sent to bg script! :)"});
+            arrFake.push(request.data);
+            console.log(arrFake);
+            savefake(request.data, creds);
+            sendResponse({resp: "Selection (fake) sent to bg script! :)"});
             break;
 
-        case 'setTextTumbsDown':
+        case 'setTextQuestionable':
             window.seltext = request.data;
             arrTexto.push(request.data);
-            arrThumbsDown.push(request.data);
-            console.log(arrThumbsDown);
-            savedown(request.data, creds);
-            sendResponse({resp: "Selection (td) sent to bg script! :)"});
+            arrQuestionable.push(request.data);
+            console.log(arrQuestionable);
+            savequestionable(request.data, creds);
+            sendResponse({resp: "Selection (questionable) sent to bg script! :)"});
             break;
          
         default:
@@ -193,25 +193,25 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 });
 
 
-function saveup(text, creds)
+function savefake(text, creds)
 {
     console.log("dataaa: ", text)
     console.log("email: ", creds)
     var jax = new XMLHttpRequest();
     var params = "text="+text+"&creds="+creds;
-    jax.open("POST","http://localhost:3000/InsertTU", true);
+    jax.open("POST","http://localhost:3000/InsertFake", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     jax.send(params);
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
 }
 
-function savedown(text, creds)
+function savequestionable(text, creds)
 {
     console.log("dataaa: ", text)
     console.log("email: ", creds)
     var jax = new XMLHttpRequest();
     var params = "text="+text+"&creds="+creds;
-    jax.open("POST","http://localhost:3000/InsertTD", true);
+    jax.open("POST","http://localhost:3000/InsertQuestionable", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     jax.send(params);
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}

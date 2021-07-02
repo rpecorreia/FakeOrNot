@@ -77,7 +77,8 @@ app.post('/InsertFake', (req, res) => {
     var email = req.body.creds;
     console.log("\nemail:", email);
     var user_id = 0;
-
+    var url = req.body.url;
+    console.log("\nurl: ", url)
     
    // handling apostrophe in sql query
   if (text.includes("'")){
@@ -110,7 +111,7 @@ app.post('/InsertFake', (req, res) => {
     user_id = result.id;
     console.log("o que és??", user_id)
 
-    var sql = "INSERT INTO `Fake` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
+    var sql = "INSERT INTO `Fake` (`text`, `user_id`, `url`) VALUES ('"+text+"', '"+user_id+"', '"+url+"')"; 
     connection.query(sql, (err,result)=>{
       if(err) throw err;
       console.log(result);
@@ -124,6 +125,8 @@ app.post('/InsertQuestionable', (req, res) => {
     var text = req.body.text;
     var email = req.body.creds;
     var user_id = 0;
+    var url = req.body.url;
+    console.log("\nurl: ", url)
 
     console.log("\ntexto:", text);
     
@@ -157,7 +160,7 @@ app.post('/InsertQuestionable', (req, res) => {
     get_info(function(result){
       user_id = result.id;
   
-      var sql = "INSERT INTO `Questionable` (`text`, `user_id`) VALUES ('"+text+"', '"+user_id+"')"; 
+      var sql = "INSERT INTO `Questionable` (`text`, `user_id`, `url`) VALUES ('"+text+"', '"+user_id+"', '"+url+"')"; 
       connection.query(sql, (err,result)=>{
         if(err) throw err;
         console.log(result);

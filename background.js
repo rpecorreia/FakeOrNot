@@ -169,21 +169,27 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
             break;
 
         case 'setTextFake':
-            window.seltext = request.data;
-            arrTexto.push(request.data);
-            arrFake.push(request.data);
-            console.log(arrFake);
-            savefake(request.data, creds);
-            sendResponse({resp: "Selection (fake) sent to bg script! :)"});
+            chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+                let url = tabs[0].url;
+                window.seltext = request.data;
+                arrTexto.push(request.data);
+                arrFake.push(request.data);
+                console.log(arrFake);
+                savefake(request.data, creds, url);
+                sendResponse({resp: "Selection (fake) sent to bg script! :)"});
+            });
             break;
 
         case 'setTextQuestionable':
-            window.seltext = request.data;
-            arrTexto.push(request.data);
-            arrQuestionable.push(request.data);
-            console.log(arrQuestionable);
-            savequestionable(request.data, creds);
-            sendResponse({resp: "Selection (questionable) sent to bg script! :)"});
+            chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+                let url = tabs[0].url;
+                window.seltext = request.data;
+                arrTexto.push(request.data);
+                arrQuestionable.push(request.data);
+                console.log(arrQuestionable);
+                savequestionable(request.data, creds, url);
+                sendResponse({resp: "Selection (questionable) sent to bg script! :)"});
+            });
             break;
          
         default:
@@ -193,24 +199,28 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 });
 
 
-function savefake(text, creds)
+
+
+function savefake(text, creds, url)
 {
-    console.log("dataaa: ", text)
-    console.log("email: ", creds)
+    console.log("dataaa: ", text);
+    console.log("email: ", creds);
+    console.log("url: ", url);
     var jax = new XMLHttpRequest();
-    var params = "text="+text+"&creds="+creds;
+    var params = "text="+text+"&creds="+creds+"&url="+url;
     jax.open("POST","http://localhost:3000/InsertFake", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     jax.send(params);
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
 }
 
-function savequestionable(text, creds)
+function savequestionable(text, creds, url)
 {
-    console.log("dataaa: ", text)
-    console.log("email: ", creds)
+    console.log("dataaa: ", text);
+    console.log("email: ", creds);
+    console.log("url: ", url);
     var jax = new XMLHttpRequest();
-    var params = "text="+text+"&creds="+creds;
+    var params = "text="+text+"&creds="+creds+"&url="+url;
     jax.open("POST","http://localhost:3000/InsertQuestionable", true);
     jax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     jax.send(params);

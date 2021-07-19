@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title></title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="jquery-3.4.1.min.js"></script>
     <script script script src="bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -16,11 +16,36 @@
 
 <body>
 
-    <form>
-        <input type="email" name="email" id="email" placeholder="Email">
-        <input type="password" name="password" id="password" placeholder="Password">
-        <button type="submit"> Sign In </button>
-    </form>
+    <div class="container" style="width:max-content; margin:50px;">
+
+        <div class="row">
+            <div class="col-12">
+                <form>
+                    <form>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Email address</label>
+                          <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1">Password</label>
+                          <input type="password" class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-5"></div>
+        <div class="col-7">
+            <a style="text-align: center; " href="popup-register.html">Register</a>
+        </div>
+    </div>
+</div>
+
+
 
 
     <script src="popup-sign-in.js"></script>

@@ -6,6 +6,9 @@ var arrQuestionable = [];
 var seltext = null;
 let user_signed_in = false;
 var creds = "";
+var creds1 = "";
+var creds2 = "";
+
 
 /*
 let userLoggedIn = false
@@ -78,6 +81,41 @@ chrome.browserAction.onClicked.addListener(function() {
 // know they have proper credentials. So we open the storage.local.set, we flip the userstatus to false, we clear their userinfo. If there
 //is an error doing that, we resolve a 'fail'. If there is no error, we know the whole process was made correctly so the usersignedin will
 // be false and we resolve with a success.  
+
+function register_user(user_info){
+
+    return fetch ('http://localhost:3000/register', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`${user_info.name}:${user_info.email}:${user_info.pass}:${user_info.confirmpass}`)
+            }
+        })
+            .then(res => {
+                return new Promise(resolve => {
+                    if (res.status === 400){
+                        console.log("faaaaaail");
+                        alert ("Email already in use!");
+                        resolve('fail');
+                    } 
+                    if (res.status === 401){
+                        console.log("faaaaaail");
+                        alert ("Passwords do not match!");
+                        resolve('fail');
+                    } 
+                    else if (res.status !== 200 ){
+                        alert("Process failed.");
+                        resolve('fail');
+                    } 
+
+                    else {resolve('success');}
+
+                }) 
+            })
+            .catch(err => console.log(err));
+
+}
+
+
 function flip_user_status(signIn, user_info){
     if(signIn){
         // fetch the localhost:3000/login route
@@ -89,7 +127,9 @@ function flip_user_status(signIn, user_info){
         })
             .then(res => {
                 return new Promise(resolve => {
-                    if (res.status !== 200) resolve('fail');
+                    if (res.status !== 200){
+                        resolve('fail');
+                    } 
 
                     chrome.storage.local.set({userStatus: signIn, user_info}, function(response){
                         if (chrome.runtime.lastError) resolve ('fail');
@@ -119,8 +159,10 @@ function flip_user_status(signIn, user_info){
                 }
                 })
                 .then(res => {
-                    if (res.status !== 200) resolve('fail');
-
+                    if (res.status !== 200){
+                        alert ("Email or password incorrect!");
+                        resolve('fail');
+                    } 
                     chrome.storage.local.set({userStatus: signIn, user_info: { }}, function(response){
                         if (chrome.runtime.lastError) resolve ('fail');
                     
@@ -164,6 +206,13 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
                 .then(res => sendResponse(res)) // the responde will be success or fail.
                 .catch(err => console.log(err));
             return true;
+
+        case 'register':
+            register_user(request.payload)
+                .then(res => sendResponse(res)) //send the final response and close the msg line.
+                .catch(err => console.log(err));
+
+            break;        
 
         case 'userStatus':
             break;

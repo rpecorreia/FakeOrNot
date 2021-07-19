@@ -1,6 +1,8 @@
 //para não estar a reeniciar o servidor.. ver e ler npm nodemon.
 const express = require('express');
 const session = require('express-session')
+const saltRounds = 10;
+
 
 //utilize o mysql2
 //https://www.npmjs.com/package/mysql2
@@ -10,6 +12,9 @@ const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
 const path = require('path');
+var async = require('async');
+var render = require('render');
+
 
 
 // parse application/x-www-form-urlencoded
@@ -175,6 +180,8 @@ app.post('/InsertQuestionable', (req, res) => {
 //middleware function to do the authorization/check of users credentials
 
 function authenticate_user(req, res, next) {
+  var user_pass = 0;
+
   let creds = req.get('Authorization');
 
   // creds will return something like "Basic klsfkjs". We dont need the 'Basic' word and the space. Basic é um tipo comum de autenticação.
@@ -191,43 +198,104 @@ function authenticate_user(req, res, next) {
   var email = creds[0];
   var pass = creds[1];
 
+
   /* Here we should make a DB check of credentials */
 
-  try{
-    let user = "SELECT password from User WHERE email = '"+email+"' ";
+  
+  function get_auth(callback){
 
-    if(user){
-      const validPass = bcrypt.compare(pass, user);
-      if(validPass){
-        connection.query(user, (err,result)=>{
-          if(err) throw err;
-          console.log(result);
-          //res.send(result);
-          res.status(200).end(); //authorized
-          next();
-      });
-      }
-      else{
-        console.log("não autorizado")
+    var sql = "SELECT `password` from User WHERE email = '"+email+"' ";
+    connection.query(sql, function(err, result){
+          if (err){ 
+            throw err;
+          }
+          console.log(result[0]);
+          user_pass = result[0]; 
+          return callback(result[0]);
+  })
+}
+
+  get_auth(function(result){
+    user_pass = result.password;    
+ 
+    bcrypt.compare(pass, user_pass, (err, result) => {
+      if (err || !result) {
+        console.log("result:", result)
+        console.log("utilizador não autorizado")
         res.status(401).end() //401 is unauthorized
+        return false;
       }
-    }
-    else{
-      console.log("não existente")
-      res.status(404).json('User not found!');
-    }
+      else {
+        console.log("result:", result);
+        res.status(200).end(); //authorized
+        next();
+      }
+    
+    });    
 
-  }
-  catch(e){
-    console.log(e);
-    res.status(401).end();
-  }
+  });
 }
 
 
 //if the user authenticates, they'll have access to the rest of the code.
 app.get('/login', authenticate_user, (req, res) => {
     res.status(200).end();
+
+});
+
+app.get('/register', (req, res) => {
+
+  let creds = req.get('Authorization');
+  // creds will return something like "Basic klsfkjs". We dont need the 'Basic' word and the space. Basic é um tipo comum de autenticação.
+  // Só queremos as credenciais que vêm a seguir, por isso:
+  creds = creds.substr(creds.indexOf(' ') + 1); // vai começar no inicio das credenciais.
+
+  // so now we need to convert it back to binary or visually for us ascii.
+  creds = Buffer.from(creds, 'base64').toString('binary');
+
+  // so the previous line should give us something like "rita@test.com:123456789"
+  // so now we want to split up the email and the pass. So:
+  creds = creds.split(':'); //this will give us an array with the email and the pass.
+
+  var name = creds[0]
+  var email = creds[1];
+  var pass = creds[2];
+  var confirmpass = creds[3];
+
+
+  connection.query('SELECT email FROM User WHERE email = ?', [email], async (error, results) => {
+    if (error) {
+      console.log(error);
+      res.status(500).end();
+    }
+
+    if (results.length > 0){ //email already exists
+      console.log("xauzinho")
+      res.status(400).send("That email is already in use!").end();
+    }
+
+    else if (pass === confirmpass) { // passwords are the same
+      console.log("olaaaaaaa")
+      let hashedPassword = await bcrypt.hash(pass, 8);
+      console.log (hashedPassword);
+
+      connection.query('INSERT INTO `User` SET ?', {name: name, email: email, password:hashedPassword}, (error, results ) =>{
+         if (error) throw err;
+
+         else {
+          console.log(results);
+          res.status(200).send("User registered.").end();
+         }
+
+      });
+    }
+
+    else { // passwords are not the same
+      console.log("xau")
+      res.status(401).end();
+    }
+
+  });
 
 });
 

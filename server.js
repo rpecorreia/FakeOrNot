@@ -151,8 +151,8 @@ app.post('/InsertQuestionable', (req, res) => {
             if (err){ 
               throw err;
             }
-            console.log(result[0]); // good
-            user_id = result[0];  // Scope is larger than function
+            console.log(result[0]);
+            user_id = result[0]; 
             return callback(result[0]);
     })
   }

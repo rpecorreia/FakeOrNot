@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Fake or Not?",
+    "name": "iColabCheck",
     "version": "0.0.1",
-    "description": "Hightlight fake or malicious content in red and very approved content in green.",
+    "description": "Hightlight fake or malicious content in red and questionable content in yellow.",
     "icons": {
         "16": "images/16.png",
         "19": "images/19.png",
@@ -15,7 +15,7 @@
         "256": "images/256.png"
     },
     "browser_action": {
-        "default_title": "Fake or Not?",
+        "default_title": "iColabCheck",
         "default_icon": {
             "19": "images/19.png",
             "38": "images/38.png"

@@ -216,22 +216,32 @@ function authenticate_user(req, res, next) {
 }
 
   get_auth(function(result){
-    user_pass = result.password;    
+
+    try{
+      user_pass = result.password;    
  
-    bcrypt.compare(pass, user_pass, (err, result) => {
-      if (err || !result) {
-        console.log("result:", result)
-        console.log("utilizador não autorizado")
-        res.status(401).end() //401 is unauthorized
-        return false;
-      }
-      else {
-        console.log("result:", result);
-        res.status(200).end(); //authorized
-        next();
-      }
-    
-    });    
+      bcrypt.compare(pass, user_pass, (err, result) => {
+        if (err || !result) {
+          console.log("result:", result)
+          console.log("utilizador não autorizado")
+          res.status(401).end() //401 is unauthorized
+          return false;
+        }
+        else {
+          console.log("result:", result);
+          res.status(200).end(); //authorized
+          next();
+        }
+      
+      });    
+    }
+
+    catch{
+      console.log("utilizador não existente")
+      res.status(404).end() 
+      return false;
+    }
+
 
   });
 }

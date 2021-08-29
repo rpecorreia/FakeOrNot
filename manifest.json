@@ -22,12 +22,10 @@
         }
     },
     "author": "Rita Correia",
-
     "background": {
         "scripts": ["background.js"],
         "persistent": true
     },
-
     "permissions": [
         "clipboardWrite",
         "tts",
@@ -42,7 +40,6 @@
         "cookies",
         "http://localhost/*"
     ],
-
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
         "js": ["main.js", "content-script.js", "jquery-3.4.1.min.js"]

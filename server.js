@@ -1,8 +1,6 @@
 //para não estar a reeniciar o servidor.. ver e ler npm nodemon.
 const express = require('express');
-const session = require('express-session')
-const saltRounds = 10;
-
+const session = require('express-session');
 
 //utilize o mysql2
 //https://www.npmjs.com/package/mysql2
@@ -11,10 +9,6 @@ var bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
-const path = require('path');
-var async = require('async');
-var render = require('render');
-
 
 
 // parse application/x-www-form-urlencoded
@@ -280,12 +274,12 @@ app.get('/register', (req, res) => {
     }
 
     if (results.length > 0){ //email already exists
-      console.log("xauzinho")
+      console.log("email is already in use")
       res.status(400).send("That email is already in use!").end();
     }
 
     else if (pass === confirmpass) { // passwords are the same
-      console.log("olaaaaaaa")
+      console.log("passwords are the same")
       let hashedPassword = await bcrypt.hash(pass, 8);
       console.log (hashedPassword);
 

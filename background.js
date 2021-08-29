@@ -93,17 +93,14 @@ function register_user(user_info){
             .then(res => {
                 return new Promise(resolve => {
                     if (res.status === 400){
-                        console.log("faaaaaail");
                         alert ("Email already in use!");
                         resolve('fail');
                     } 
                     if (res.status === 401){
-                        console.log("faaaaaail");
                         alert ("Passwords do not match!");
                         resolve('fail');
                     } 
                     else if (res.status !== 200 ){
-                        alert("Process failed.");
                         resolve('fail');
                     } 
 
@@ -128,6 +125,7 @@ function flip_user_status(signIn, user_info){
             .then(res => {
                 return new Promise(resolve => {
                     if (res.status !== 200){
+                        alert ("Email or password incorrect!");
                         resolve('fail');
                     } 
 

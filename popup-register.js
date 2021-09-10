@@ -1,11 +1,9 @@
 document.querySelector('form').addEventListener('submit', event => {
     event.preventDefault();
-
     const name = document.querySelector('#name').value;
     const email = document.querySelector('#email').value;
     const pass = document.querySelector('#password').value;
     const confirmpass = document.querySelector('#password2').value;
-
 
     if (name && email && pass) {
         // send msg to bg with email and pass
@@ -26,6 +24,5 @@ document.querySelector('form').addEventListener('submit', event => {
         document.querySelector('#email').classList.add('white_placeholder');
         document.querySelector('#password').classList.add('white_placeholder');
         document.querySelector('#password2').classList.add('white_placeholder');
-
     }
 })

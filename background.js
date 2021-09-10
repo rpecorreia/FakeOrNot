@@ -83,7 +83,6 @@ chrome.browserAction.onClicked.addListener(function() {
 // be false and we resolve with a success.  
 
 function register_user(user_info){
-
     return fetch ('http://localhost:3000/register', {
             method: 'GET',
             headers: {
@@ -103,13 +102,10 @@ function register_user(user_info){
                     else if (res.status !== 200 ){
                         resolve('fail');
                     } 
-
                     else {resolve('success');}
-
                 }) 
             })
             .catch(err => console.log(err));
-
 }
 
 
@@ -120,15 +116,13 @@ function flip_user_status(signIn, user_info){
             method: 'GET',
             headers: {
                 'Authorization': 'Basic ' + btoa(`${user_info.email}:${user_info.pass}`)
-            }
-        })
+            }})
             .then(res => {
                 return new Promise(resolve => {
                     if (res.status !== 200){
                         alert ("Email or password incorrect!");
                         resolve('fail');
                     } 
-
                     chrome.storage.local.set({userStatus: signIn, user_info}, function(response){
                         if (chrome.runtime.lastError) resolve ('fail');
 
@@ -145,17 +139,14 @@ function flip_user_status(signIn, user_info){
         // so to return an actual promise, we need to wrap it.
         return new Promise (resolve => {
             chrome.storage.local.get(['userStatus', user_info], function(response){
-            
                 if (browser.runtime.lastError) resolve ('fail');
-    
                 if (response.userStatus === undefined) resolve ('fail');
                 //we expect a false bc user already signed in. we're gonna sign the user out with a fetch.
                 fetch ('http://localhost:3000/logout', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Basic ' + btoa(`${response.user_info.email}:${response.user_info.pass}`)
-                }
-                })
+                }})
                 .then(res => {
                     if (res.status !== 200){
                         alert ("Email or password incorrect!");
@@ -192,7 +183,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
     {
         case 'login':
             creds = request.payload.email;
-            console.log("CREDSSSSSSS", creds);
             flip_user_status(true, request.payload)
                 .then(res => sendResponse(res)) //send the final response and close the msg line.
                 .catch(err => console.log(err));
@@ -246,13 +236,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse)
 });
 
 
-
-
-function savefake(text, creds, url)
-{
-    console.log("dataaa: ", text);
-    console.log("email: ", creds);
-    console.log("url: ", url);
+function savefake(text, creds, url) {
     var jax = new XMLHttpRequest();
     var params = "text="+text+"&creds="+creds+"&url="+url;
     jax.open("POST","http://localhost:3000/InsertFake", true);
@@ -261,11 +245,7 @@ function savefake(text, creds, url)
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
 }
 
-function savequestionable(text, creds, url)
-{
-    console.log("dataaa: ", text);
-    console.log("email: ", creds);
-    console.log("url: ", url);
+function savequestionable(text, creds, url) {
     var jax = new XMLHttpRequest();
     var params = "text="+text+"&creds="+creds+"&url="+url;
     jax.open("POST","http://localhost:3000/InsertQuestionable", true);
@@ -273,4 +253,3 @@ function savequestionable(text, creds, url)
     jax.send(params);
     jax.onreadystatechange = function() { if(jax.readyState==4) { alert(jax.responseText);  }}
 }
-

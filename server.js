@@ -1,4 +1,3 @@
-//para não estar a reeniciar o servidor.. ver e ler npm nodemon.
 const express = require('express');
 const session = require('express-session');
 
@@ -10,18 +9,15 @@ const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
 
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse application/json
 app.use(bodyParser.json())
 
-
 app.use(session({secret:'Keep it secret'
 ,name:'uniqueSessionID'
 ,saveUninitialized:false}))
-
 
 // create the connection to database
 const connection = mysql.createConnection({
@@ -40,7 +36,6 @@ connection.connect(function(err){
   console.log("Database Connected!");
   
 });
-
 
 //isto é feito com o express
 app.get('/', function (req, res) {
@@ -94,7 +89,6 @@ app.post('/InsertFake', (req, res) => {
   console.log("\ntexto ALT: ", text);
     
   function get_info(callback){
-
     var sql = "SELECT `id` FROM `User` WHERE `email` = '"+email+"'";
     connection.query(sql, function(err, result){
           if (err){ 
@@ -108,8 +102,6 @@ app.post('/InsertFake', (req, res) => {
 
   get_info(function(result){
     user_id = result.id;
-    console.log("o que és??", user_id)
-
     var sql = "INSERT INTO `Fake` (`text`, `user_id`, `url`) VALUES ('"+text+"', '"+user_id+"', '"+url+"')"; 
     connection.query(sql, (err,result)=>{
       if(err) throw err;
@@ -197,7 +189,6 @@ function authenticate_user(req, res, next) {
 
   
   function get_auth(callback){
-
     var sql = "SELECT `password` from User WHERE email = '"+email+"' ";
     connection.query(sql, function(err, result){
           if (err){ 
@@ -210,10 +201,8 @@ function authenticate_user(req, res, next) {
 }
 
   get_auth(function(result){
-
     try{
       user_pass = result.password;    
- 
       bcrypt.compare(pass, user_pass, (err, result) => {
         if (err || !result) {
           console.log("result:", result)
@@ -226,7 +215,6 @@ function authenticate_user(req, res, next) {
           res.status(200).end(); //authorized
           next();
         }
-      
       });    
     }
 
@@ -235,11 +223,8 @@ function authenticate_user(req, res, next) {
       res.status(404).end() 
       return false;
     }
-
-
   });
 }
-
 
 //if the user authenticates, they'll have access to the rest of the code.
 app.get('/login', authenticate_user, (req, res) => {
@@ -295,12 +280,9 @@ app.get('/register', (req, res) => {
     }
 
     else { // passwords are not the same
-      console.log("xau")
       res.status(401).end();
     }
-
   });
-
 });
 
 app.get('/logout', authenticate_user, (req, res) => {
@@ -314,7 +296,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.message || "Problem.")
 });
-
 
 
 // Port

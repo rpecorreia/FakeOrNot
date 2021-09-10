@@ -1,53 +1,44 @@
 function count(str) {
     var obj = {};
-
     str.split(/[ ,.]+/).forEach(function(el) {
         obj[el] = obj[el] ? ++obj[el] : 1;
     });
-
     return obj;
 }
 
 chrome.runtime.onMessage.addListener(function(request) {
-    console.log("listening");
-    //se botão de thumbs up clicado
+    //fake button clicked
     if (request.action == 'executeCode') {
         var sel = window.getSelection().toString();
         if(sel.length)
             chrome.extension.sendRequest({'message':'setTextFake','data': sel},function(response){console.log(response.resp)})
         arrFake.push(sel);
         console.log(count(arrFake.toString()));
-        console.log("fake: ", arrFake);
         highlightSelection();
 
         return;
     }
-    //se botão de thumbs down clicado
+    //questionable button clicked
     else if (request.action == 'executeCode2') {
         var sel = window.getSelection().toString();
         if(sel.length)
             chrome.extension.sendRequest({'message':'setTextQuestionable','data': sel},function(response){console.log(response.resp)})
         arrQuestionable.push(sel);
         console.log(count(arrQuestionable.toString()));
-        console.log("questionable: ", arrQuestionable);
         highlightSelection2();
         return;
     }
 });
 
-// função que vai buscar a seleção e corre a função para a sublinhar a verde
+// it gets the fake content text and calls the function to highlight the selection in red 
 function highlightSelection() {
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
-    //arrTexto.push(safeRanges);
-    //console.log("saferange: " + safeRanges);
-    //console.log("arr: " + arrTexto);
-
     for (var i = 0; i < safeRanges.length; i++) {
         highlightRange(safeRanges[i]);
     }
 }
 
-// função que vai buscar a seleção e corre a função para a sublinhar a vermelho
+// it gets the questionable content text and calls the function to highlight the selection in yellow 
 function highlightSelection2() {
     var safeRanges = getSafeRanges(window.getSelection().getRangeAt(0));
     for (var i = 0; i < safeRanges.length; i++) {
@@ -55,8 +46,8 @@ function highlightSelection2() {
     }
 }
 
-/* para conseguir atravessar as tags html todas */
 
+/* para conseguir atravessar as tags html todas */
 function getSafeRanges(dangerous) {
     var a = dangerous.commonAncestorContainer;
     // Starts -- Work inward from the start, selecting the largest safe range
@@ -120,7 +111,7 @@ function getSafeRanges(dangerous) {
     return response;
 }
 
-//função que sublinha a verde na página web
+//function that highlights in red the selection in the web page
 function highlightRange(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
@@ -130,7 +121,7 @@ function highlightRange(range) {
     range.surroundContents(newNode);
 }
 
-//função que sublinha a vermelho na página web
+//function that highlights in yellow the selection in the web page
 function highlightRange2(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(

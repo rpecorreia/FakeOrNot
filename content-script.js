@@ -12,6 +12,9 @@ chrome.runtime.onMessage.addListener(function(request) {
         var sel = window.getSelection().toString();
         if(sel.length)
             chrome.extension.sendRequest({'message':'setTextFake','data': sel},function(response){console.log(response.resp)})
+        else{
+            alert("Please, make a valid selection.")
+        }
         arrFake.push(sel);
         console.log(count(arrFake.toString()));
         highlightSelection();
@@ -23,6 +26,9 @@ chrome.runtime.onMessage.addListener(function(request) {
         var sel = window.getSelection().toString();
         if(sel.length)
             chrome.extension.sendRequest({'message':'setTextQuestionable','data': sel},function(response){console.log(response.resp)})
+        else{
+            alert("Please, make a valid selection.")
+        }
         arrQuestionable.push(sel);
         console.log(count(arrQuestionable.toString()));
         highlightSelection2();
@@ -46,8 +52,7 @@ function highlightSelection2() {
     }
 }
 
-
-/* para conseguir atravessar as tags html todas */
+/* to get through all html tags */
 function getSafeRanges(dangerous) {
     var a = dangerous.commonAncestorContainer;
     // Starts -- Work inward from the start, selecting the largest safe range
@@ -129,5 +134,4 @@ function highlightRange2(range) {
         "background-color: #ebeb1e; display: inline;"
     );
     range.surroundContents(newNode);
-
 }

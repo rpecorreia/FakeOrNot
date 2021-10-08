@@ -1,8 +1,6 @@
 const express = require('express');
 const session = require('express-session');
 
-//utilize o mysql2
-//https://www.npmjs.com/package/mysql2
 const mysql = require('mysql2');
 var bodyParser = require('body-parser');
 const app = express();
@@ -32,12 +30,10 @@ const connection = mysql.createConnection({
 
 connection.connect(function(err){
   if(err)throw err;
-  
   console.log("Database Connected!");
-  
 });
 
-//isto é feito com o express
+//test with express
 app.get('/', function (req, res) {
     res.send('Hello World')
   })
@@ -162,7 +158,6 @@ app.post('/InsertQuestionable', (req, res) => {
 
 
 // Login and logout system
-
 //middleware function to do the authorization/check of users credentials
 
 function authenticate_user(req, res, next) {
@@ -171,8 +166,8 @@ function authenticate_user(req, res, next) {
   let creds = req.get('Authorization');
 
   // creds will return something like "Basic klsfkjs". We dont need the 'Basic' word and the space. Basic é um tipo comum de autenticação.
-  // Só queremos as credenciais que vêm a seguir, por isso:
-  creds = creds.substr(creds.indexOf(' ') + 1); // vai começar no inicio das credenciais.
+  // We just want the credentials that come next, so:
+  creds = creds.substr(creds.indexOf(' ') + 1); // start in the begin of the credenials
 
   // so now we need to convert it back to binary or visually for us ascii.
   creds = Buffer.from(creds, 'base64').toString('binary');
@@ -184,10 +179,8 @@ function authenticate_user(req, res, next) {
   var email = creds[0];
   var pass = creds[1];
 
-
   /* Here we should make a DB check of credentials */
 
-  
   function get_auth(callback){
     var sql = "SELECT `password` from User WHERE email = '"+email+"' ";
     connection.query(sql, function(err, result){
@@ -236,8 +229,8 @@ app.get('/register', (req, res) => {
 
   let creds = req.get('Authorization');
   // creds will return something like "Basic klsfkjs". We dont need the 'Basic' word and the space. Basic é um tipo comum de autenticação.
-  // Só queremos as credenciais que vêm a seguir, por isso:
-  creds = creds.substr(creds.indexOf(' ') + 1); // vai começar no inicio das credenciais.
+  // We just want the credentials that come next, so:
+  creds = creds.substr(creds.indexOf(' ') + 1); // starts at the begin of the credentials
 
   // so now we need to convert it back to binary or visually for us ascii.
   creds = Buffer.from(creds, 'base64').toString('binary');
@@ -296,7 +289,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.message || "Problem.")
 });
-
 
 // Port
 app.listen(port, () => {

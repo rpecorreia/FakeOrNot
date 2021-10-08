@@ -5,7 +5,7 @@ document.querySelector('form').addEventListener('submit', event => {
     const pass = document.querySelector('#password').value;
     const confirmpass = document.querySelector('#password2').value;
 
-    if (name && email && pass) {
+    if (name && email && pass && confirmpass) {
         // send msg to bg with email and pass
         chrome.extension.sendRequest({'message':'register', 'payload': {name, email, pass, confirmpass}},function(response){
             if (response === 'success') window.location.replace('popup-sign-in.html');

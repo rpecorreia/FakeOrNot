@@ -45,8 +45,6 @@ cookie => {
 
 */
 
-
-
 chrome.browserAction.onClicked.addListener(function() {
     if (!user_signed_in){
         chrome.browserAction.setPopup({ popup: 'popup-sign-in.html' })
@@ -62,25 +60,6 @@ chrome.browserAction.onClicked.addListener(function() {
         chrome.browserAction.setPopup({ popup: 'popup.html' })
 })
 */
-
-// ------- if(signIn): -----
-//this function flips user status. If the signIn is true, we sign them in. It returns a promise. We return a fetch call to the server API
-// basically, we hit the localhost:3000/login with the method GET and we send the email and the password throught the Authorization header
-// and we're gonna parse that in the backend. If the response is not 200 aka fail, we will resolve a fail. If not, we know we've successfully
-// passed the backend test, and we saved that status in the local storage of chrome. We saved the user status which is true or false (in this
-// case true), we save the email and the encrypted password. We then got a response. If there is an error, it will resolve a fail. If not, the
-// user have successfully signed in, se we change the variable to true, and we resolve the "success". Thats what the case "login" res will
-// expect.
-// ------- if(!signIn): -----
-// if the signIn is false, it means they wanna sign out.  Again, we return a Promise bcnthis function is supose to return a Promise.
-// So we do a new Promise, we get the resolve object, we open up the chrome local storage to see if the user has the proper credentials, 
-// we'll send that to the backend. So we get the user status and the user info. If there is an error getting the stuff, we send back 'fail'.
-// If the status is undefined (it's neither true nor false) we send back a 'fail'. Else, we know thats a true or false, we fetch to the 
-// logout URI on the backend through the GET method, we send in the header the authorization with the user email and pass. The backend
-// verifies if that user is actually on the system. Is he is,  it sends a 200 code. Otherwise we resolve a 'fail'. If it is 200, we 
-// know they have proper credentials. So we open the storage.local.set, we flip the userstatus to false, we clear their userinfo. If there
-//is an error doing that, we resolve a 'fail'. If there is no error, we know the whole process was made correctly so the usersignedin will
-// be false and we resolve with a success.  
 
 function register_user(user_info){
     return fetch ('http://localhost:3000/register', {
@@ -167,7 +146,7 @@ function flip_user_status(signIn, user_info){
 }
 
 //btoa: binary to ascii -> encodes in 64 bit the email and pass. não mandamos a pass em plaintext
-//por ex, se eu enviar rita@test.com:123, ele vai codificar para "cml0YUB0ZXN0LmNvbToxMjM="
+//e.g., if I send rita@test.com:123, it will code to "Basic cml0YUB0ZXN0LmNvbToxMjM="
 
 function Fake() {
     return arrFake;
